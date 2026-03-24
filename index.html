@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Analytics – MCQ Test | NCET</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  // ── PASTE YOUR FIREBASE CONFIG BELOW ──────────────────────────────────────
+  // Steps: https://console.firebase.google.com → New Project → Web App → Copy config
+  const firebaseConfig = {
+    apiKey:            "YOUR_API_KEY",
+    authDomain:        "YOUR_PROJECT.firebaseapp.com",
+    projectId:         "YOUR_PROJECT_ID",
+    storageBucket:     "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId:             "YOUR_APP_ID"
+  };
+  // ──────────────────────────────────────────────────────────────────────────
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  window._saveResult = async function(payload) {
+    try {
+      await addDoc(collection(db, "test_results"), {
+        ...payload,
+        submittedAt: serverTimestamp()
+      });
+      return true;
+    } catch (e) {
+      console.error("Firestore error:", e);
+      return false;
+    }
+  };
+</script>
+
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:     #0d0f12;
+  --paper:   #f8f5ef;
+  --accent:  #e84c2b;
+  --mid:     #3b4a6b;
+  --lite:    #eae7df;
+  --correct: #1a7a4a;
+  --wrong:   #c0392b;
+  --warn:    #e67e22;
+  --card:    #ffffff;
+  --radius:  12px;
+  --shadow:  0 4px 24px rgba(0,0,0,.10);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+h1,h2,h3,h4 { font-family: 'Syne', sans-serif; }
+
+/* ── SCREEN MANAGER ───────────────────────────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── LANDING ──────────────────────────────────────────────────────────────── */
+#screen-landing {
+  min-height: 100vh;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--ink);
+  position: relative;
+  overflow: hidden;
+}
+#screen-landing.active { display: flex; }
+
+#screen-landing::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 50%, rgba(232,76,43,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 30%, rgba(59,74,107,.4) 0%, transparent 60%);
+}
+
+.landing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  max-width: 1000px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  align-items: center;
+}
+
+@media (max-width: 700px) {
+  .landing-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+.landing-left .badge {
+  display: inline-block;
+  background: rgba(232,76,43,.2);
+  border: 1px solid rgba(232,76,43,.5);
+  color: #f4a089;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .35rem .9rem;
+  border-radius: 99px;
+  margin-bottom: 1.2rem;
+}
+
+.landing-left h1 {
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 800;
+  color: #f8f5ef;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+.landing-left h1 span { color: var(--accent); }
+
+.landing-left p {
+  color: #9aa3b8;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  max-width: 420px;
+}
+
+.meta-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-bottom: 2.5rem;
+}
+.meta-pill {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  color: #c8cedb;
+  font-size: .8rem;
+  padding: .35rem .9rem;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.meta-pill .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Landing form card */
+.form-card {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 20px;
+  padding: 2.5rem;
+  backdrop-filter: blur(12px);
+}
+.form-card h2 {
+  font-size: 1.4rem;
+  color: #f8f5ef;
+  margin-bottom: .4rem;
+}
+.form-card p { color: #7a8396; font-size: .88rem; margin-bottom: 1.8rem; }
+
+.field { margin-bottom: 1.2rem; }
+.field label {
+  display: block;
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #9aa3b8;
+  margin-bottom: .5rem;
+}
+.field input, .field select {
+  width: 100%;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: var(--radius);
+  color: #f8f5ef;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .95rem;
+  padding: .75rem 1rem;
+  outline: none;
+  transition: border-color .2s;
+}
+.field input::placeholder { color: #5a6070; }
+.field input:focus, .field select:focus { border-color: var(--accent); }
+.field select option { background: #1a1d26; }
+
+.btn-start {
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  padding: .9rem 1.5rem;
+  cursor: pointer;
+  transition: background .2s, transform .1s, box-shadow .2s;
+  box-shadow: 0 4px 20px rgba(232,76,43,.35);
+  margin-top: .5rem;
+}
+.btn-start:hover { background: #c73d20; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(232,76,43,.45); }
+.btn-start:active { transform: translateY(0); }
+
+/* ── TEST SCREEN ──────────────────────────────────────────────────────────── */
+#screen-test {
+  min-height: 100vh;
+  padding: 0 0 6rem;
+  background: var(--paper);
+}
+#screen-test.active { display: block; }
+
+.test-header {
+  background: var(--ink);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,.3);
+}
+.test-header .logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #f8f5ef;
+}
+.test-header .logo span { color: var(--accent); }
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+#timer-display {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #f8f5ef;
+  background: rgba(255,255,255,.08);
+  padding: .4rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.1);
+  min-width: 80px;
+  text-align: center;
+  transition: color .3s, background .3s;
+}
+#timer-display.warn { color: var(--warn); border-color: rgba(230,126,34,.4); }
+#timer-display.danger { color: #e74c3c; border-color: rgba(231,76,60,.4); background: rgba(231,76,60,.08); }
+
+.progress-wrap {
+  flex: 1;
+  max-width: 320px;
+  margin: 0 1.5rem;
+}
+.progress-label {
+  font-size: .75rem;
+  color: #9aa3b8;
+  margin-bottom: .35rem;
+  display: flex;
+  justify-content: space-between;
+}
+.progress-bar {
+  height: 5px;
+  background: rgba(255,255,255,.1);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 99px;
+  transition: width .4s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+
+@media (max-width: 600px) {
+  .progress-wrap { display: none; }
+  .test-header { padding: .8rem 1rem; }
+}
+
+/* Module tabs */
+.module-tabs {
+  display: flex;
+  gap: .5rem;
+  padding: 1.2rem 2rem .6rem;
+  max-width: 900px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.module-tab {
+  font-family: 'Syne', sans-serif;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: .4rem 1rem;
+  border-radius: 99px;
+  border: 1px solid transparent;
+  cursor: default;
+  transition: all .3s;
+}
+.module-tab.mod-excel  { background: rgba(26,122,74,.1);  color: #1a7a4a; border-color: rgba(26,122,74,.25); }
+.module-tab.mod-sql    { background: rgba(59,74,107,.1);  color: #3b4a6b; border-color: rgba(59,74,107,.25); }
+.module-tab.mod-powerbi{ background: rgba(232,76,43,.1);  color: var(--accent); border-color: rgba(232,76,43,.25); }
+.module-tab.active-tab { opacity: 1; box-shadow: 0 2px 12px rgba(0,0,0,.1); }
+.module-tab:not(.active-tab) { opacity: .45; }
+
+/* Question card */
+.q-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: .5rem 2rem 2rem;
+}
+
+.q-card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(0,0,0,.06);
+  animation: slideIn .35s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.q-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.q-num-badge {
+  background: var(--ink);
+  color: #f8f5ef;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: .85rem;
+  padding: .35rem .9rem;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.q-topic-badge {
+  background: var(--lite);
+  color: #5a6070;
+  font-size: .75rem;
+  padding: .3rem .8rem;
+  border-radius: 6px;
+}
+.q-co-badge {
+  margin-left: auto;
+  font-size: .75rem;
+  font-weight: 600;
+  color: #9aa3b8;
+}
+
+.q-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 2rem;
+  line-height: 1.65;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .85rem;
+}
+@media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
+
+.option-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: .9rem;
+  padding: 1rem 1.2rem;
+  background: #fafafa;
+  border: 2px solid #e8e5df;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .95rem;
+  color: var(--ink);
+  transition: all .18s;
+  line-height: 1.5;
+}
+.option-btn:hover:not(:disabled) {
+  border-color: var(--mid);
+  background: #f0eee8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0,0,0,.07);
+}
+.option-btn .opt-key {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--lite);
+  border: 2px solid #d5d0c8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .8rem;
+  color: #5a6070;
+  transition: all .18s;
+  margin-top: .05rem;
+}
+.option-btn:hover:not(:disabled) .opt-key { background: var(--mid); color: #fff; border-color: var(--mid); }
+.option-btn.selected { border-color: var(--mid); background: #edf0f7; }
+.option-btn.selected .opt-key { background: var(--mid); color: #fff; border-color: var(--mid); }
+.option-btn:disabled { cursor: default; }
+
+/* Nav row */
+.q-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.btn-skip {
+  background: none;
+  border: 1.5px solid #ccc;
+  color: #888;
+  border-radius: 10px;
+  padding: .6rem 1.2rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-skip:hover { border-color: #888; color: var(--ink); }
+
+.btn-next, .btn-submit-final {
+  background: var(--ink);
+  color: #f8f5ef;
+  border: none;
+  border-radius: 10px;
+  padding: .7rem 1.8rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.btn-next:hover { background: var(--accent); }
+.btn-submit-final { background: var(--correct); }
+.btn-submit-final:hover { background: #155a37; }
+
+.answered-count {
+  font-size: .85rem;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.answered-count strong { color: var(--ink); }
+
+/* Quick jump palette */
+.q-palette-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem 1rem;
+}
+.palette-label {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #9aa3b8;
+  margin-bottom: .7rem;
+}
+.q-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+.palette-btn {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  border: 1.5px solid #d5d0c8;
+  background: #fff;
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: .75rem;
+  cursor: pointer;
+  transition: all .15s;
+  color: var(--ink);
+}
+.palette-btn:hover { border-color: var(--mid); color: var(--mid); }
+.palette-btn.p-answered { background: var(--mid); border-color: var(--mid); color: #fff; }
+.palette-btn.p-current  { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── SUBMITTING OVERLAY ───────────────────────────────────────────────────── */
+#overlay-submitting {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13,15,18,.85);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+#overlay-submitting.show { display: flex; }
+.spinner {
+  width: 52px; height: 52px;
+  border: 4px solid rgba(255,255,255,.15);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#overlay-submitting p { color: #f8f5ef; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; }
+
+/* ── RESULTS SCREEN ───────────────────────────────────────────────────────── */
+#screen-result {
+  min-height: 100vh;
+  background: var(--paper);
+  padding: 2rem 1rem 5rem;
+}
+#screen-result.active { display: block; }
+
+.result-inner { max-width: 860px; margin: 0 auto; }
+
+.result-hero {
+  background: var(--ink);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.result-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 80% at 50% 110%, rgba(232,76,43,.25) 0%, transparent 65%);
+}
+.result-hero .student-name {
+  font-size: .85rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #9aa3b8;
+  margin-bottom: .4rem;
+  position: relative;
+}
+.result-hero h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: #f8f5ef;
+  margin-bottom: .3rem;
+  position: relative;
+}
+.result-hero .score-fraction {
+  font-size: 4.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin: .8rem 0 .4rem;
+  position: relative;
+}
+.result-hero .score-fraction span { font-size: 2rem; color: #7a8396; }
+.result-hero .pct-label {
+  font-size: 1rem;
+  color: #9aa3b8;
+  position: relative;
+}
+.result-hero .grade-badge {
+  display: inline-block;
+  margin-top: 1.2rem;
+  padding: .5rem 1.6rem;
+  border-radius: 99px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  position: relative;
+}
+.grade-badge.excellent  { background: rgba(26,122,74,.25);  color: #4ecf8a; border: 1px solid rgba(78,207,138,.3); }
+.grade-badge.good       { background: rgba(52,152,219,.2);  color: #5dade2; border: 1px solid rgba(93,173,226,.3); }
+.grade-badge.average    { background: rgba(230,126,34,.2);  color: #f0a84a; border: 1px solid rgba(240,168,74,.3); }
+.grade-badge.poor       { background: rgba(231,76,60,.2);   color: #e74c3c; border: 1px solid rgba(231,76,60,.3); }
+
+/* Stats row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+@media (max-width: 600px) { .stats-row { grid-template-columns: repeat(2,1fr); } }
+
+.stat-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 1.4rem 1rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(0,0,0,.05);
+}
+.stat-card .stat-val {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  margin-bottom: .2rem;
+}
+.stat-card .stat-lbl { font-size: .78rem; color: #888; text-transform: uppercase; letter-spacing: .06em; }
+.stat-card.s-correct .stat-val { color: var(--correct); }
+.stat-card.s-wrong .stat-val   { color: var(--wrong); }
+.stat-card.s-skip .stat-val    { color: var(--warn); }
+.stat-card.s-time .stat-val    { color: var(--mid); }
+
+/* Module breakdown */
+.breakdown-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 2px solid var(--lite);
+}
+
+.module-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+  margin-bottom: 2rem;
+}
+.mod-row {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+}
+.mod-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .95rem;
+  min-width: 160px;
+}
+.mod-bar-wrap { flex: 1; min-width: 120px; }
+.mod-bar-track {
+  height: 8px;
+  background: var(--lite);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.mod-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 1s cubic-bezier(.4,0,.2,1);
+}
+.mod-score-text {
+  font-weight: 600;
+  font-size: .9rem;
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: right;
+}
+
+/* Answer review */
+.review-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 2px solid var(--lite);
+}
+
+.review-filters {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.2rem;
+}
+.rf-btn {
+  padding: .35rem .9rem;
+  border-radius: 99px;
+  border: 1.5px solid #d5d0c8;
+  background: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .82rem;
+  cursor: pointer;
+  transition: all .18s;
+  color: #666;
+}
+.rf-btn:hover, .rf-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+.review-list { display: flex; flex-direction: column; gap: .8rem; }
+
+.review-item {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  border-left: 4px solid #e8e5df;
+}
+.review-item.ri-correct { border-left-color: var(--correct); }
+.review-item.ri-wrong   { border-left-color: var(--wrong); }
+.review-item.ri-skip    { border-left-color: var(--warn); }
+
+.ri-header {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: .6rem;
+  flex-wrap: wrap;
+}
+.ri-num { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .82rem; color: #888; }
+.ri-status {
+  font-size: .75rem;
+  font-weight: 600;
+  padding: .22rem .7rem;
+  border-radius: 99px;
+}
+.ri-status.correct { background: rgba(26,122,74,.12); color: var(--correct); }
+.ri-status.wrong   { background: rgba(192,57,43,.1);  color: var(--wrong); }
+.ri-status.skip    { background: rgba(230,126,34,.12); color: var(--warn); }
+
+.ri-q { font-size: .92rem; font-weight: 500; margin-bottom: .6rem; line-height: 1.55; }
+
+.ri-options { display: grid; grid-template-columns: 1fr 1fr; gap: .35rem; }
+@media (max-width: 500px) { .ri-options { grid-template-columns: 1fr; } }
+
+.ri-opt {
+  font-size: .82rem;
+  padding: .35rem .7rem;
+  border-radius: 7px;
+  border: 1.5px solid #e5e0d8;
+  color: #666;
+}
+.ri-opt.ri-correct-ans { background: rgba(26,122,74,.1); border-color: var(--correct); color: var(--correct); font-weight: 600; }
+.ri-opt.ri-user-wrong  { background: rgba(192,57,43,.08); border-color: var(--wrong); color: var(--wrong); }
+
+/* Retry & share */
+.result-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+.btn-retry {
+  background: var(--ink);
+  color: #f8f5ef;
+  border: none;
+  border-radius: 12px;
+  padding: .85rem 2rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-retry:hover { background: var(--accent); }
+
+.saved-notice {
+  font-size: .85rem;
+  color: var(--correct);
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  margin-top: 1rem;
+}
+.saved-notice.error { color: var(--wrong); }
+
+/* ── MISC ─────────────────────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* ── SUBMISSIONS SUMMARY ──────────────────────────────────────────────────── */
+#screen-summary {
+  min-height: 100vh;
+  background: var(--paper);
+  padding: 2rem 1rem 5rem;
+}
+#screen-summary.active { display: block; }
+
+.summary-inner { max-width: 960px; margin: 0 auto; }
+
+.summary-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.summary-header-bar h2 {
+  font-size: 1.6rem;
+  color: var(--ink);
+}
+.summary-header-bar p { color: #888; font-size: .9rem; }
+
+.btn-back-result {
+  background: var(--ink);
+  color: #f8f5ef;
+  border: none;
+  border-radius: 10px;
+  padding: .65rem 1.6rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-back-result:hover { background: var(--accent); }
+
+.btn-clear-data {
+  background: transparent;
+  color: var(--wrong);
+  border: 1.5px solid var(--wrong);
+  border-radius: 10px;
+  padding: .6rem 1.4rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-clear-data:hover { background: var(--wrong); color: #fff; }
+
+.summary-stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+@media (max-width: 600px) { .summary-stats-bar { grid-template-columns: repeat(2,1fr); } }
+
+.sum-stat-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 1.4rem 1rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(0,0,0,.05);
+}
+.sum-stat-card .sv {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  color: var(--mid);
+  margin-bottom: .2rem;
+}
+.sum-stat-card .sl { font-size: .75rem; color: #888; text-transform: uppercase; letter-spacing: .06em; }
+
+.submissions-table-wrap {
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.05);
+}
+
+.submissions-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .88rem;
+}
+.submissions-table-wrap thead th {
+  background: var(--ink);
+  color: #9aa3b8;
+  font-family: 'Syne', sans-serif;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: .9rem 1.2rem;
+  text-align: left;
+  white-space: nowrap;
+}
+.submissions-table-wrap tbody tr {
+  border-bottom: 1px solid rgba(0,0,0,.05);
+  transition: background .15s;
+}
+.submissions-table-wrap tbody tr:last-child { border-bottom: none; }
+.submissions-table-wrap tbody tr:hover { background: #f5f3ee; }
+.submissions-table-wrap tbody td {
+  padding: .85rem 1.2rem;
+  color: var(--ink);
+  vertical-align: middle;
+}
+.sub-name { font-weight: 600; }
+.sub-usn  { color: #888; font-size: .8rem; }
+.sub-score-badge {
+  display: inline-block;
+  padding: .25rem .75rem;
+  border-radius: 99px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .8rem;
+}
+.sub-score-badge.ex { background: rgba(26,122,74,.12); color: var(--correct); }
+.sub-score-badge.gd { background: rgba(52,152,219,.12); color: #3498db; }
+.sub-score-badge.av { background: rgba(230,126,34,.12); color: var(--warn); }
+.sub-score-badge.po { background: rgba(192,57,43,.1); color: var(--wrong); }
+
+.sub-time { color: #888; font-size: .82rem; }
+.sub-submitted-at { color: #aaa; font-size: .78rem; }
+
+.no-submissions {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #aaa;
+  font-size: .95rem;
+}
+.no-submissions .icon { font-size: 3rem; margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ LANDING ═══ -->
+<section id="screen-landing" class="screen active">
+  <div class="landing-grid">
+    <div class="landing-left">
+      <span class="badge">NCET – Data Analytics</span>
+      <h1>Test Your <span>Analytics</span> Knowledge</h1>
+      <p>50 multiple-choice questions covering Excel, SQL, and Power BI. Timer included. Instant results with module-wise breakdown.</p>
+      <div class="meta-pills">
+        <div class="meta-pill"><span class="dot"></span> 50 Questions</div>
+        <div class="meta-pill"><span class="dot"></span> 60 Min Timer</div>
+        <div class="meta-pill"><span class="dot"></span> Excel · SQL · Power BI</div>
+        <div class="meta-pill"><span class="dot"></span> Instant Results</div>
+      </div>
+    </div>
+    <div class="form-card">
+      <h2>Start Your Test</h2>
+      <p>Enter your details to begin. Results will be saved automatically.</p>
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="input-name" placeholder="e.g. Priya Sharma" maxlength="60" />
+      </div>
+      <div class="field">
+        <label>USN / Roll Number</label>
+        <input type="text" id="input-usn" placeholder="e.g. 1NC22CS045" maxlength="20" />
+      </div>
+
+      <button class="btn-start" onclick="startTest()">Begin Test →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ TEST ════════ -->
+<section id="screen-test" class="screen">
+  <div class="test-header">
+    <div class="logo">NCET <span>·</span> Data Analytics</div>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progress-text">0 / 50</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+    <div class="header-meta">
+      <div id="timer-display">60:00</div>
+    </div>
+  </div>
+
+  <div class="module-tabs">
+    <div class="module-tab mod-excel"   id="tab-excel">Module I – Excel</div>
+    <div class="module-tab mod-sql"     id="tab-sql">Module II – SQL</div>
+    <div class="module-tab mod-powerbi" id="tab-powerbi">Module III – Power BI</div>
+  </div>
+
+  <div class="q-palette-wrap">
+    <div class="palette-label">Quick Jump</div>
+    <div class="q-palette" id="q-palette"></div>
+  </div>
+
+  <div class="q-container">
+    <div class="q-card" id="q-card">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ SUBMITTING ══ -->
+<div id="overlay-submitting">
+  <div class="spinner"></div>
+  <p>Saving your results…</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ RESULTS ═════ -->
+<section id="screen-result" class="screen">
+  <div class="result-inner">
+    <div class="result-hero">
+      <div class="student-name" id="r-name"></div>
+      <h2>Test Complete!</h2>
+      <div class="score-fraction" id="r-score">–<span>/50</span></div>
+      <div class="pct-label" id="r-pct">–%</div>
+      <div class="grade-badge" id="r-grade"></div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card s-correct"><div class="stat-val" id="r-correct">–</div><div class="stat-lbl">Correct</div></div>
+      <div class="stat-card s-wrong"  ><div class="stat-val" id="r-wrong">–</div>  <div class="stat-lbl">Wrong</div></div>
+      <div class="stat-card s-skip"   ><div class="stat-val" id="r-skip">–</div>   <div class="stat-lbl">Skipped</div></div>
+      <div class="stat-card s-time"   ><div class="stat-val" id="r-time">–</div>   <div class="stat-lbl">Time Taken</div></div>
+    </div>
+
+    <div class="breakdown-title">Module-wise Performance</div>
+    <div class="module-breakdown" id="module-breakdown"></div>
+
+    <div class="review-title">Answer Review</div>
+    <div class="review-filters">
+      <button class="rf-btn active" onclick="filterReview('all',this)">All (50)</button>
+      <button class="rf-btn" onclick="filterReview('correct',this)">✓ Correct</button>
+      <button class="rf-btn" onclick="filterReview('wrong',this)">✗ Wrong</button>
+      <button class="rf-btn" onclick="filterReview('skip',this)">– Skipped</button>
+    </div>
+    <div class="review-list" id="review-list"></div>
+
+    <div class="result-actions">
+      <button class="btn-retry" onclick="retryTest()">↩ Retry Test</button>
+      <button class="btn-retry" style="background:var(--mid);" onclick="showSummary()">📊 View All Submissions</button>
+    </div>
+    <div id="saved-notice"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ ALL SUBMISSIONS ════ -->
+<section id="screen-summary" class="screen">
+  <div class="summary-inner">
+    <div class="summary-header-bar">
+      <div>
+        <h2>All Submissions</h2>
+        <p>Summary of everyone who has submitted the test on this device</p>
+      </div>
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap;">
+        <button class="btn-clear-data" onclick="clearAllData()">🗑 Clear All Data</button>
+        <button class="btn-back-result" onclick="backToMyResult()">← My Result</button>
+      </div>
+    </div>
+
+    <div class="summary-stats-bar">
+      <div class="sum-stat-card"><div class="sv" id="sum-total">0</div><div class="sl">Total Submitted</div></div>
+      <div class="sum-stat-card"><div class="sv" id="sum-avg">–</div><div class="sl">Avg Score</div></div>
+      <div class="sum-stat-card"><div class="sv" id="sum-top">–</div><div class="sl">Top Score</div></div>
+      <div class="sum-stat-card"><div class="sv" id="sum-pass">–</div><div class="sl">Pass Rate (≥40%)</div></div>
+    </div>
+
+    <div class="submissions-table-wrap" id="submissions-table-wrap">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════════════════════════════════════════════ SCRIPT ════ -->
+<script>
+// ── QUESTION BANK (50 questions, no repeats from IAT-1/2/3) ──────────────────
+// Format: { q, opts:[a,b,c,d], ans (0-indexed), module, topic, co }
+const QUESTIONS = [
+  // ── EXCEL (Q1–17) ─────────────────────────────────────────────────────────
+  {q:"Which of the following is the correct syntax for the SUM function in Excel?",
+   opts:["=SUM(A1:A10)","SUM[A1:A10]","SUM(A1,A10)","=ADD(A1:A10)"],ans:0,module:"Excel",topic:"Basic Functions",co:"CO1"},
+  {q:"In Excel, which feature is used to highlight cells based on their values or conditions?",
+   opts:["Data Validation","Conditional Formatting","Cell Styles","Format Painter"],ans:1,module:"Excel",topic:"Formatting",co:"CO1"},
+  {q:"Which Excel function returns the number of cells that meet a given condition?",
+   opts:["COUNT","COUNTA","COUNTIF","SUM"],ans:2,module:"Excel",topic:"Functions",co:"CO1"},
+  {q:"To sort data in Excel from largest to smallest, you would select:",
+   opts:["Ascending order","Descending order","Custom sort","Filter sort"],ans:1,module:"Excel",topic:"Sorting & Filtering",co:"CO1"},
+  {q:"Which chart type is most suitable for showing trends over time in Excel?",
+   opts:["Pie chart","Bar chart","Line chart","Scatter chart"],ans:2,module:"Excel",topic:"Charts",co:"CO1"},
+  {q:"In Excel, a cell reference like $A$1 is called a _______ reference.",
+   opts:["Relative","Mixed","Absolute","Dynamic"],ans:2,module:"Excel",topic:"Cell References",co:"CO1"},
+  {q:"Which Excel function calculates the average of a range of cells?",
+   opts:["MEAN()","AVG()","AVERAGE()","MEDIAN()"],ans:2,module:"Excel",topic:"Functions",co:"CO1"},
+  {q:"Which function in Excel returns the largest value in a set of values?",
+   opts:["LARGE()","TOP()","MAX()","HIGH()"],ans:2,module:"Excel",topic:"Functions",co:"CO1"},
+  {q:"The SUMIF function in Excel sums values that:",
+   opts:["Are in a specific column","Meet a specified condition","Are greater than zero","Are in a named range"],ans:1,module:"Excel",topic:"Functions",co:"CO1"},
+  {q:"Which Excel feature helps prevent invalid data from being entered into a cell?",
+   opts:["Conditional Formatting","Protect Sheet","Data Validation","Cell Lock"],ans:2,module:"Excel",topic:"Data Validation",co:"CO1"},
+  {q:"What is a Sparkline in Excel?",
+   opts:["A type of conditional formatting","A mini chart placed in a single cell","A type of data bar","A chart template"],ans:1,module:"Excel",topic:"Charts",co:"CO1"},
+  {q:"What does the CONCATENATE function (or & operator) do in Excel?",
+   opts:["Adds two numbers","Joins two or more text strings","Counts text cells","Finds text in a cell"],ans:1,module:"Excel",topic:"Functions",co:"CO1"},
+  {q:"Which function rounds a number to a specified number of digits in Excel?",
+   opts:["TRUNCATE()","FLOOR()","ROUND()","INT()"],ans:2,module:"Excel",topic:"Functions",co:"CO1"},
+  {q:"What does 'Remove Duplicates' do in Excel?",
+   opts:["Hides duplicate rows","Deletes rows with duplicate values in selected columns","Highlights duplicate cells","Moves duplicates to a new sheet"],ans:1,module:"Excel",topic:"Data Cleaning",co:"CO1"},
+  {q:"In an Excel Pivot Table, the 'Slicer' feature is used to:",
+   opts:["Cut data into rows","Visually filter pivot table data","Apply conditional formatting","Slice cells for editing"],ans:1,module:"Excel",topic:"Pivot Tables",co:"CO1"},
+  {q:"Which Excel function looks up a value in a row and returns a value from a specified column?",
+   opts:["VLOOKUP","HLOOKUP","XLOOKUP","INDEX-MATCH"],ans:1,module:"Excel",topic:"Functions",co:"CO1"},
+  {q:"In a Pivot Table, the 'Values' area typically contains:",
+   opts:["Row labels","Column labels","Numeric data to be summarized (e.g., SUM, COUNT)","Filter fields"],ans:2,module:"Excel",topic:"Pivot Tables",co:"CO1"},
+
+  // ── SQL (Q18–34) ──────────────────────────────────────────────────────────
+  {q:"Which SQL command is used to retrieve data from a database?",
+   opts:["GET","FETCH","SELECT","PULL"],ans:2,module:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"What does the WHERE clause do in a SQL query?",
+   opts:["Groups rows","Filters rows based on a condition","Sorts results","Joins tables"],ans:1,module:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"Which SQL aggregate function returns the total sum of a numeric column?",
+   opts:["COUNT()","AVG()","MAX()","SUM()"],ans:3,module:"SQL",topic:"Aggregation",co:"CO2"},
+  {q:"Which type of JOIN returns only the rows that have matching values in both tables?",
+   opts:["LEFT JOIN","RIGHT JOIN","INNER JOIN","FULL JOIN"],ans:2,module:"SQL",topic:"Joins",co:"CO2"},
+  {q:"Which SQL command is used to add new records into a table?",
+   opts:["ADD","UPDATE","INSERT INTO","CREATE"],ans:2,module:"SQL",topic:"DML",co:"CO2"},
+  {q:"A subquery in SQL is:",
+   opts:["A query that creates a new table","A query nested inside another query","A query that deletes records","A query used only with GROUP BY"],ans:1,module:"SQL",topic:"Subqueries & CTEs",co:"CO2"},
+  {q:"Which SQL clause is used to filter results after aggregation?",
+   opts:["WHERE","HAVING","FILTER","GROUP"],ans:1,module:"SQL",topic:"Aggregation",co:"CO2"},
+  {q:"Which keyword in SQL is used to return only unique (distinct) values?",
+   opts:["UNIQUE","DIFFERENT","DISTINCT","ONLY"],ans:2,module:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"Which SQL operator is used to search for a pattern in a column?",
+   opts:["MATCH","FIND","LIKE","SEARCH"],ans:2,module:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"What does NULL represent in SQL?",
+   opts:["Zero value","Empty string","Missing or unknown value","False value"],ans:2,module:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"The AS keyword in SQL is used to:",
+   opts:["Create a new table","Give a column or table a temporary alias","Assign a value to a variable","Join tables"],ans:1,module:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"What is the difference between WHERE and HAVING in SQL?",
+   opts:["WHERE filters groups; HAVING filters rows","WHERE filters rows before grouping; HAVING filters groups after grouping","There is no difference","HAVING is used only with SELECT *"],ans:1,module:"SQL",topic:"Aggregation",co:"CO2"},
+  {q:"A LEFT JOIN in SQL returns:",
+   opts:["Only matching rows from both tables","All rows from the left table and matching rows from the right table","All rows from the right table","All rows from both tables"],ans:1,module:"SQL",topic:"Joins",co:"CO2"},
+  {q:"A CTE (Common Table Expression) in SQL is defined using which keyword?",
+   opts:["DEFINE","WITH","CREATE TEMP","SUBQUERY"],ans:1,module:"SQL",topic:"Subqueries & CTEs",co:"CO2"},
+  {q:"Which SQL command removes a table's data but keeps the table structure?",
+   opts:["DROP TABLE","DELETE FROM table WHERE 1=1","TRUNCATE TABLE","REMOVE TABLE"],ans:2,module:"SQL",topic:"DML",co:"CO2"},
+  {q:"Which SQL keyword is used to combine the result sets of two SELECT statements, removing duplicates?",
+   opts:["JOIN","INTERSECT","UNION","MERGE"],ans:2,module:"SQL",topic:"Subqueries & CTEs",co:"CO2"},
+  {q:"What happens if you execute DELETE FROM table_name without a WHERE clause?",
+   opts:["Nothing happens","Only the first row is deleted","All rows in the table are deleted","The table structure is dropped"],ans:2,module:"SQL",topic:"DML",co:"CO2"},
+
+  // ── POWER BI (Q35–50) ─────────────────────────────────────────────────────
+  {q:"Power BI is primarily used for:",
+   opts:["Word processing","Spreadsheet calculations","Business intelligence and data visualization","Network management"],ans:2,module:"PowerBI",topic:"Fundamentals",co:"CO3"},
+  {q:"Which view in Power BI Desktop is used to create and format visual reports?",
+   opts:["Data view","Model view","Report view","Query view"],ans:2,module:"PowerBI",topic:"Interface",co:"CO3"},
+  {q:"In Power BI, what is Power Query used for?",
+   opts:["Creating DAX formulas","Designing report layouts","Connecting to and transforming data before loading","Publishing reports to the cloud"],ans:2,module:"PowerBI",topic:"Data Connection",co:"CO3"},
+  {q:"What does DAX stand for in Power BI?",
+   opts:["Data Analysis Expressions","Database Access Extension","Dynamic Analytics Exchange","Data Aggregation Execution"],ans:0,module:"PowerBI",topic:"DAX",co:"CO3"},
+  {q:"In Power BI data modeling, a relationship between two tables is based on:",
+   opts:["A common column (key) present in both tables","The same number of rows","Identical column names only","Matching data types only"],ans:0,module:"PowerBI",topic:"Data Modeling",co:"CO3"},
+  {q:"In Power BI, which editor is used to clean and transform data?",
+   opts:["DAX Editor","Power Query Editor","Report Editor","Model Editor"],ans:1,module:"PowerBI",topic:"Data Connection",co:"CO3"},
+  {q:"In Power BI, what is a 'Measure'?",
+   opts:["A fixed value stored in a table","A DAX formula that calculates dynamically based on filter context","A renamed column","A table relationship"],ans:1,module:"PowerBI",topic:"DAX",co:"CO3"},
+  {q:"Which DAX function calculates the sum of a column?",
+   opts:["TOTAL()","ADD()","SUM()","SUMX()"],ans:2,module:"PowerBI",topic:"DAX",co:"CO3"},
+  {q:"What does the CALCULATE function do in DAX?",
+   opts:["Performs arithmetic calculations","Evaluates an expression in a modified filter context","Creates a new table","Joins two tables"],ans:1,module:"PowerBI",topic:"DAX",co:"CO3"},
+  {q:"What is a 'Slicer' in Power BI?",
+   opts:["A DAX function","A visual used to interactively filter other visuals on a report page","A data transformation step","A type of relationship"],ans:1,module:"PowerBI",topic:"Visualizations",co:"CO3"},
+  {q:"Which Power BI visual is best for showing trends over time?",
+   opts:["Pie chart","Card","Line chart","Table"],ans:2,module:"PowerBI",topic:"Visualizations",co:"CO3"},
+  {q:"In Power BI, 'Drill-down' allows you to:",
+   opts:["Export data to Excel","Navigate to lower levels of a hierarchy within a visual","Open another report","Apply a date filter"],ans:1,module:"PowerBI",topic:"Visualizations",co:"CO3"},
+  {q:"Which panel in Power BI Desktop shows the list of tables and fields available?",
+   opts:["Filters pane","Visualizations pane","Fields pane","Format pane"],ans:2,module:"PowerBI",topic:"Interface",co:"CO3"},
+  {q:"In Power BI data modeling, a 'Star Schema' consists of:",
+   opts:["One fact table linked to multiple dimension tables","Multiple fact tables with no dimensions","Only dimension tables","Tables with no relationships"],ans:0,module:"PowerBI",topic:"Data Modeling",co:"CO3"},
+  {q:"Which DAX function counts the number of rows in a table?",
+   opts:["ROWCOUNT()","COUNTROWS()","COUNT()","ROWS()"],ans:1,module:"PowerBI",topic:"DAX",co:"CO3"},
+  {q:"Which Power BI visual displays data as nested rectangles where size represents value?",
+   opts:["Funnel chart","Treemap","Waterfall chart","Gauge"],ans:1,module:"PowerBI",topic:"Visualizations",co:"CO3"},
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let student = {};
+let answers = new Array(50).fill(null);   // null=unanswered, 0-3=chosen
+let current = 0;
+let timerInterval = null;
+let secondsLeft = 3600;   // 60 min
+let secondsUsed  = 0;
+let testStarted  = false;
+
+const OPTS = ["A","B","C","D"];
+const TOTAL_TIME = 3600;
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function $(id) { return document.getElementById(id); }
+function show(id) { $(id).classList.add("active"); }
+function hide(id) { $(id).classList.remove("active"); }
+
+function fmtTime(s) {
+  const m = Math.floor(s/60), sec = s%60;
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+// ── LANDING → START ───────────────────────────────────────────────────────────
+function startTest() {
+  const name = $("input-name").value.trim();
+  const usn  = $("input-usn").value.trim();
+  if (!name || !usn) {
+    alert("Please fill in all fields before starting.");
+    return;
+  }
+  student = { name, usn };
+  hide("screen-landing");
+  show("screen-test");
+  buildPalette();
+  renderQuestion(0);
+  startTimer();
+  testStarted = true;
+}
+
+// ── TIMER ─────────────────────────────────────────────────────────────────────
+function startTimer() {
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    secondsUsed++;
+    const el = $("timer-display");
+    el.textContent = fmtTime(secondsLeft);
+    if (secondsLeft <= 300 && secondsLeft > 60) el.className = "warn";
+    if (secondsLeft <= 60) el.className = "danger";
+    if (secondsLeft <= 0) { clearInterval(timerInterval); submitTest(); }
+  }, 1000);
+}
+
+// ── PALETTE ───────────────────────────────────────────────────────────────────
+function buildPalette() {
+  const pal = $("q-palette");
+  pal.innerHTML = "";
+  QUESTIONS.forEach((_, i) => {
+    const b = document.createElement("button");
+    b.className = "palette-btn";
+    b.id = `pb-${i}`;
+    b.textContent = i+1;
+    b.onclick = () => goTo(i);
+    pal.appendChild(b);
+  });
+}
+
+function updatePalette() {
+  QUESTIONS.forEach((_, i) => {
+    const b = $(`pb-${i}`);
+    b.className = "palette-btn" +
+      (i === current ? " p-current" : answers[i] !== null ? " p-answered" : "");
+  });
+}
+
+// ── MODULE TABS ───────────────────────────────────────────────────────────────
+function updateTabs(idx) {
+  const m = QUESTIONS[idx].module;
+  ["excel","sql","powerbi"].forEach(t => $(`tab-${t}`).classList.remove("active-tab"));
+  const map = { Excel:"excel", SQL:"sql", PowerBI:"powerbi" };
+  $(`tab-${map[m]}`).classList.add("active-tab");
+}
+
+// ── RENDER QUESTION ───────────────────────────────────────────────────────────
+function renderQuestion(idx) {
+  current = idx;
+  const q = QUESTIONS[idx];
+  const answered = answers.filter(a => a !== null).length;
+
+  // progress
+  $("progress-fill").style.width = (answered / 50 * 100) + "%";
+  $("progress-text").textContent = `${answered} / 50`;
+  $("progress-pct").textContent  = Math.round(answered/50*100) + "%";
+
+  updateTabs(idx);
+  updatePalette();
+
+  const isLast = idx === 49;
+  const sel = answers[idx];
+
+  $("q-card").innerHTML = `
+    <div class="q-meta">
+      <span class="q-num-badge">Q ${idx+1} / 50</span>
+      <span class="q-topic-badge">${q.module} · ${q.topic}</span>
+      <span class="q-co-badge">${q.co}</span>
+    </div>
+    <div class="q-text">${q.q}</div>
+    <div class="options-grid">
+      ${q.opts.map((opt,oi) => `
+        <button class="option-btn ${sel===oi?'selected':''}"
+                onclick="selectOpt(${oi})"
+                ${sel!==null?'disabled':''}>
+          <span class="opt-key">${OPTS[oi]}</span>
+          <span>${opt}</span>
+        </button>`).join('')}
+    </div>
+    <div class="q-nav">
+      <div class="answered-count"><strong>${answered}</strong> of 50 answered</div>
+      <div style="display:flex;gap:.7rem;align-items:center;">
+        ${idx > 0 ? `<button class="btn-skip" onclick="goTo(${idx-1})">← Prev</button>` : ''}
+        <button class="btn-skip" onclick="goTo(${idx < 49 ? idx+1 : idx})">Skip →</button>
+        ${isLast
+          ? `<button class="btn-submit-final" onclick="confirmSubmit()">Submit Test ✓</button>`
+          : `<button class="btn-next" onclick="goTo(${idx+1})">Next →</button>`}
+      </div>
+    </div>
+  `;
+
+  // Re-enable options if already answered (for review during test)
+  if (sel !== null) {
+    document.querySelectorAll('.option-btn').forEach(b => b.disabled = false);
+    document.querySelectorAll('.option-btn')[sel].classList.add('selected');
+    // re-disable after reselect to avoid double clicking
+    document.querySelectorAll('.option-btn').forEach((b,i) => {
+      b.onclick = () => selectOpt(i);
+    });
+  }
+}
+
+function selectOpt(oi) {
+  if (answers[current] === oi) {
+    // deselect (toggle off)
+    answers[current] = null;
+  } else {
+    answers[current] = oi;
+  }
+  renderQuestion(current);
+}
+
+function goTo(idx) {
+  if (idx < 0 || idx > 49) return;
+  renderQuestion(idx);
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────────────────────
+function confirmSubmit() {
+  const unanswered = answers.filter(a => a === null).length;
+  if (unanswered > 0) {
+    if (!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)) return;
+  } else {
+    if (!confirm("Submit your test? You cannot change answers after submission.")) return;
+  }
+  submitTest();
+}
+
+async function submitTest() {
+  clearInterval(timerInterval);
+  secondsUsed = TOTAL_TIME - secondsLeft;
+
+  $("overlay-submitting").classList.add("show");
+
+  // Score calculation
+  let correct=0, wrong=0, skip=0;
+  const modStats = { Excel:{c:0,t:0}, SQL:{c:0,t:0}, PowerBI:{c:0,t:0} };
+
+  QUESTIONS.forEach((q,i) => {
+    modStats[q.module].t++;
+    if (answers[i] === null) { skip++; }
+    else if (answers[i] === q.ans) { correct++; modStats[q.module].c++; }
+    else { wrong++; }
+  });
+
+  const payload = {
+    student,
+    score: correct,
+    total: 50,
+    correct, wrong, skip,
+    timeTaken: secondsUsed,
+    moduleStats: modStats,
+    answers: answers.map((a,i) => ({
+      qIndex: i,
+      chosen: a,
+      correct: QUESTIONS[i].ans,
+      isCorrect: a === QUESTIONS[i].ans,
+      isSkipped: a === null
+    }))
+  };
+
+  // Save to localStorage
+  saveToLocalStorage(payload);
+
+  // Save to Firestore
+  let saved = false;
+  if (window._saveResult) {
+    saved = await window._saveResult(payload);
+  }
+
+  $("overlay-submitting").classList.remove("show");
+  showResults(payload, saved, modStats);
+}
+
+// ── LOCAL STORAGE ─────────────────────────────────────────────────────────────
+const LS_KEY = "ncet_da_submissions";
+
+function saveToLocalStorage(payload) {
+  try {
+    const existing = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
+    existing.push({
+      name:       payload.student.name,
+      usn:        payload.student.usn,
+      score:      payload.correct,
+      total:      payload.total,
+      wrong:      payload.wrong,
+      skip:       payload.skip,
+      timeTaken:  payload.timeTaken,
+      moduleStats: payload.moduleStats,
+      submittedAt: new Date().toISOString()
+    });
+    localStorage.setItem(LS_KEY, JSON.stringify(existing));
+  } catch(e) {
+    console.warn("localStorage save failed:", e);
+  }
+}
+
+function getSubmissions() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || "[]"); }
+  catch(e) { return []; }
+}
+
+// ── SUMMARY SCREEN ────────────────────────────────────────────────────────────
+let _lastPayload = null; // store so we can return
+
+function showSummary() {
+  hide("screen-result");
+  show("screen-summary");
+  renderSummary();
+  window.scrollTo(0, 0);
+}
+
+function backToMyResult() {
+  hide("screen-summary");
+  show("screen-result");
+  window.scrollTo(0, 0);
+}
+
+function clearAllData() {
+  if (!confirm("Delete ALL submission records? This cannot be undone.")) return;
+  localStorage.removeItem(LS_KEY);
+  renderSummary();
+}
+
+function renderSummary() {
+  const subs = getSubmissions();
+
+  // Aggregate stats
+  $("sum-total").textContent = subs.length;
+  if (subs.length === 0) {
+    $("sum-avg").textContent  = "–";
+    $("sum-top").textContent  = "–";
+    $("sum-pass").textContent = "–";
+  } else {
+    const avg  = subs.reduce((a,s) => a + s.score, 0) / subs.length;
+    const top  = Math.max(...subs.map(s => s.score));
+    const pass = subs.filter(s => (s.score / s.total) >= 0.4).length;
+    $("sum-avg").textContent  = avg.toFixed(1);
+    $("sum-top").textContent  = top + "/50";
+    $("sum-pass").textContent = Math.round(pass / subs.length * 100) + "%";
+  }
+
+  const wrap = $("submissions-table-wrap");
+  if (subs.length === 0) {
+    wrap.innerHTML = `<div class="no-submissions"><div class="icon">📭</div>No submissions yet. Be the first to complete the test!</div>`;
+    return;
+  }
+
+  // Sort by score desc
+  const sorted = [...subs].sort((a,b) => b.score - a.score || a.timeTaken - b.timeTaken);
+
+  wrap.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Student</th>
+          <th>Score</th>
+          <th>Correct</th>
+          <th>Wrong</th>
+          <th>Skipped</th>
+          <th>Time</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${sorted.map((s, idx) => {
+          const pct = Math.round(s.score / s.total * 100);
+          let cls = pct >= 80 ? 'ex' : pct >= 60 ? 'gd' : pct >= 40 ? 'av' : 'po';
+          const dt = new Date(s.submittedAt);
+          const dtStr = isNaN(dt) ? '–' : dt.toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'}) + ' ' + dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+          return `<tr>
+            <td style="color:#aaa;font-size:.8rem;">${idx+1}</td>
+            <td>
+              <div class="sub-name">${esc(s.name)}</div>
+              <div class="sub-usn">${esc(s.usn)}</div>
+            </td>
+            <td><span class="sub-score-badge ${cls}">${s.score}/50 (${pct}%)</span></td>
+            <td style="color:var(--correct);font-weight:600;">${s.score}</td>
+            <td style="color:var(--wrong);font-weight:600;">${s.wrong}</td>
+            <td style="color:var(--warn);font-weight:600;">${s.skip}</td>
+            <td class="sub-time">${fmtTime(s.timeTaken)}</td>
+            <td class="sub-submitted-at">${dtStr}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
+}
+
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── RESULTS ───────────────────────────────────────────────────────────────────
+function showResults(p, saved, modStats) {
+  hide("screen-test");
+  show("screen-result");
+  window.scrollTo(0,0);
+
+  const pct = Math.round(p.correct/50*100);
+
+  $("r-name").textContent = `${p.student.name}  ·  ${p.student.usn}`;
+  $("r-score").innerHTML  = `${p.correct}<span>/50</span>`;
+  $("r-pct").textContent  = `${pct}% Score`;
+
+  const gb = $("r-grade");
+  if (pct >= 80) { gb.textContent="Excellent 🎉"; gb.className="grade-badge excellent"; }
+  else if (pct >= 60) { gb.textContent="Good 👍"; gb.className="grade-badge good"; }
+  else if (pct >= 40) { gb.textContent="Average 📚"; gb.className="grade-badge average"; }
+  else { gb.textContent="Needs Work 💪"; gb.className="grade-badge poor"; }
+
+  $("r-correct").textContent = p.correct;
+  $("r-wrong").textContent   = p.wrong;
+  $("r-skip").textContent    = p.skip;
+  $("r-time").textContent    = fmtTime(p.timeTaken);
+
+  // Module breakdown
+  const colours = { Excel:"#1a7a4a", SQL:"#3b4a6b", PowerBI:"#e84c2b" };
+  const labels  = { Excel:"Module I – Excel", SQL:"Module II – SQL", PowerBI:"Module III – Power BI" };
+  const totals  = { Excel:17, SQL:17, PowerBI:16 };
+  $("module-breakdown").innerHTML = Object.entries(modStats).map(([mod,s]) => {
+    const mpct = Math.round(s.c / totals[mod] * 100);
+    return `<div class="mod-row">
+      <div class="mod-name" style="color:${colours[mod]}">${labels[mod]}</div>
+      <div class="mod-bar-wrap">
+        <div class="mod-bar-track">
+          <div class="mod-bar-fill" style="width:${mpct}%;background:${colours[mod]}" data-w="${mpct}"></div>
+        </div>
+      </div>
+      <div class="mod-score-text" style="color:${colours[mod]}">${s.c}/${totals[mod]} (${mpct}%)</div>
+    </div>`;
+  }).join('');
+
+  // Animate bars after paint
+  setTimeout(() => {
+    document.querySelectorAll('.mod-bar-fill').forEach(el => {
+      el.style.width = el.dataset.w + '%';
+    });
+  }, 100);
+
+  // Build review
+  buildReview();
+
+  // Saved notice
+  const sn = $("saved-notice");
+  if (saved) {
+    sn.innerHTML = `<span style="color:var(--correct);font-size:.85rem;">✓ Results saved to database successfully.</span>`;
+  } else {
+    sn.innerHTML = `<span style="color:var(--warn);font-size:.85rem;">⚠ Could not save to database (check Firebase config). Screenshot your results.</span>`;
+  }
+}
+
+function buildReview() {
+  window._reviewItems = QUESTIONS.map((q,i) => {
+    const ua = answers[i];
+    const status = ua === null ? 'skip' : ua === q.ans ? 'correct' : 'wrong';
+    return { i, q, ua, status };
+  });
+  renderReview('all');
+}
+
+function renderReview(filter) {
+  const items = window._reviewItems.filter(r => filter === 'all' || r.status === filter);
+  $("review-list").innerHTML = items.map(({i,q,ua,status}) => {
+    const statusLabel = status==='correct'?'✓ Correct':status==='wrong'?'✗ Wrong':'– Skipped';
+    const opts = q.opts.map((opt,oi) => {
+      let cls = '';
+      if (oi === q.ans) cls = 'ri-correct-ans';
+      else if (oi === ua && ua !== q.ans) cls = 'ri-user-wrong';
+      return `<div class="ri-opt ${cls}">${OPTS[oi]}) ${opt}</div>`;
+    }).join('');
+    return `<div class="review-item ri-${status}">
+      <div class="ri-header">
+        <span class="ri-num">Q${i+1}</span>
+        <span class="ri-status ${status}">${statusLabel}</span>
+        <span style="font-size:.75rem;color:#aaa;margin-left:auto">${q.module} · ${q.topic}</span>
+      </div>
+      <div class="ri-q">${q.q}</div>
+      <div class="ri-options">${opts}</div>
+    </div>`;
+  }).join('');
+}
+
+function filterReview(filter, btn) {
+  document.querySelectorAll('.rf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderReview(filter);
+}
+
+function retryTest() {
+  if (!confirm("Restart the test? All answers will be reset.")) return;
+  answers = new Array(50).fill(null);
+  current = 0;
+  secondsLeft = TOTAL_TIME;
+  secondsUsed = 0;
+  testStarted = false;
+  clearInterval(timerInterval);
+  hide("screen-result");
+  show("screen-landing");
+}
+</script>
+</body>
+</html>
