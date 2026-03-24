@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Analytics MCQ Test – NCET</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- ═══════════════════════════ FIREBASE ═══════════════════════════════════ -->
+<script type="module">
+  import { initializeApp }   from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+                             from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  /* ── PASTE YOUR FIREBASE CONFIG HERE ───────────────────────────────────── */
+  const firebaseConfig = {
+    apiKey:            "YOUR_API_KEY",
+    authDomain:        "YOUR_PROJECT.firebaseapp.com",
+    projectId:         "YOUR_PROJECT_ID",
+    storageBucket:     "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId:             "YOUR_APP_ID"
+  };
+  /* ─────────────────────────────────────────────────────────────────────── */
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  window._saveResult = async (payload) => {
+    try {
+      await addDoc(collection(db, "test_results"), { ...payload, submittedAt: serverTimestamp() });
+      return true;
+    } catch(e) { console.error(e); return false; }
+  };
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --navy:  #0a1628;
+  --navy2: #112240;
+  --teal:  #0ea5a0;
+  --teal2: #14b8b2;
+  --gold:  #f5c842;
+  --paper: #f7f4ee;
+  --cream: #fffdf8;
+  --ink:   #1a1a2e;
+  --muted: #8892a4;
+  --green: #22c55e;
+  --red:   #ef4444;
+  --amber: #f59e0b;
+}
+
+body { font-family:'Nunito',sans-serif; background:var(--paper); color:var(--ink); min-height:100vh; -webkit-font-smoothing:antialiased; }
+
+.screen { display:none; }
+.screen.on { display:block; }
+#scr-landing.on { display:flex; }
+
+/* ════════════════════ LANDING ════════════════════ */
+#scr-landing {
+  min-height:100vh; display:none; align-items:center; justify-content:center;
+  padding:2rem; background:var(--navy); position:relative; overflow:hidden;
+}
+#scr-landing::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 60% 70% at 15% 50%, rgba(14,165,160,.18) 0%,transparent 55%),
+    radial-gradient(ellipse 50% 60% at 85% 20%, rgba(245,200,66,.10) 0%,transparent 50%);
+  animation:mesh 8s ease-in-out infinite alternate;
+}
+@keyframes mesh { from{opacity:.7} to{opacity:1} }
+#scr-landing::after {
+  content:''; position:absolute; inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:30px 30px;
+}
+.land-wrap {
+  position:relative; z-index:2;
+  display:grid; grid-template-columns:1.1fr 1fr; gap:5rem;
+  max-width:1020px; width:100%; align-items:center;
+}
+@media(max-width:780px){ .land-wrap{ grid-template-columns:1fr; gap:2.5rem; } }
+
+.pill {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:rgba(14,165,160,.18); border:1px solid rgba(14,165,160,.4);
+  color:var(--teal2); font-size:.72rem; font-weight:700;
+  letter-spacing:.12em; text-transform:uppercase;
+  padding:.35rem 1rem; border-radius:99px; margin-bottom:1.4rem;
+}
+.pill::before {
+  content:''; width:6px; height:6px; border-radius:50%;
+  background:var(--teal2); display:inline-block;
+  animation:blink 1.5s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.land-left h1 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.6rem,5vw,4rem); font-weight:900;
+  color:#f0ece2; line-height:1.08; margin-bottom:1.1rem;
+}
+.land-left h1 em { font-style:normal; color:var(--teal2); }
+.land-left p { font-size:.98rem; color:#7a8899; line-height:1.75; margin-bottom:2rem; max-width:400px; }
+.info-chips { display:flex; flex-wrap:wrap; gap:.6rem; }
+.chip {
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+  color:#9aaabb; font-size:.78rem; font-weight:600;
+  padding:.38rem .9rem; border-radius:8px;
+}
+
+.form-card {
+  background:var(--cream); border-radius:24px; padding:2.8rem 2.4rem;
+  box-shadow:0 24px 80px rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.6);
+}
+.form-card h2 { font-family:'Playfair Display',serif; font-size:1.7rem; font-weight:700; color:var(--navy); margin-bottom:.3rem; }
+.form-card .sub { font-size:.85rem; color:var(--muted); margin-bottom:2rem; }
+.field { margin-bottom:1.1rem; }
+.field label { display:block; font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.45rem; }
+.field input,.field select {
+  width:100%; background:#f5f3ee; border:2px solid #e8e3d9;
+  border-radius:10px; color:var(--ink);
+  font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:500;
+  padding:.72rem 1rem; outline:none; transition:border-color .2s,box-shadow .2s;
+}
+.field input::placeholder { color:#bbb; }
+.field input:focus,.field select:focus { border-color:var(--teal); box-shadow:0 0 0 3px rgba(14,165,160,.12); }
+.btn-start {
+  width:100%; margin-top:.6rem;
+  background:linear-gradient(135deg,var(--teal),var(--teal2));
+  color:#fff; border:none; border-radius:12px;
+  font-family:'Nunito',sans-serif; font-size:1rem; font-weight:800;
+  padding:.95rem 1.5rem; cursor:pointer;
+  box-shadow:0 6px 24px rgba(14,165,160,.4);
+  transition:transform .15s,box-shadow .2s;
+}
+.btn-start:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(14,165,160,.5); }
+
+/* ════════════════════ TEST ════════════════════ */
+#scr-test { background:var(--paper); padding-bottom:5rem; }
+
+.test-bar {
+  background:var(--navy); padding:.85rem 2rem;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:200;
+  box-shadow:0 2px 20px rgba(0,0,0,.25); gap:1rem; flex-wrap:wrap;
+}
+.bar-brand { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:#e8e2d5; white-space:nowrap; }
+.bar-brand span { color:var(--teal2); }
+.bar-progress { flex:1; max-width:360px; display:flex; flex-direction:column; gap:.3rem; }
+.bar-prog-top { display:flex; justify-content:space-between; font-size:.72rem; font-weight:700; color:var(--muted); }
+.prog-track { height:5px; background:rgba(255,255,255,.1); border-radius:99px; overflow:hidden; }
+.prog-fill { height:100%; background:linear-gradient(90deg,var(--teal),var(--gold)); border-radius:99px; transition:width .4s cubic-bezier(.4,0,.2,1); width:0; }
+
+#timer {
+  font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700; color:#e8e2d5;
+  background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+  border-radius:10px; padding:.38rem 1rem; min-width:80px; text-align:center;
+  transition:color .3s,background .3s,border-color .3s;
+}
+#timer.warn   { color:var(--amber); border-color:rgba(245,158,11,.4); }
+#timer.danger { color:var(--red);   border-color:rgba(239,68,68,.4); background:rgba(239,68,68,.08); }
+
+.mod-strip { display:flex; gap:.5rem; padding:1rem 2rem .5rem; max-width:940px; margin:0 auto; flex-wrap:wrap; }
+.mod-tag {
+  font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+  padding:.3rem .85rem; border-radius:6px; border:1.5px solid transparent; opacity:.4; transition:opacity .3s;
+}
+.mod-tag.excel  { color:#16a34a; border-color:rgba(22,163,74,.3);  background:rgba(22,163,74,.07); }
+.mod-tag.sql    { color:#1d4ed8; border-color:rgba(29,78,216,.3);  background:rgba(29,78,216,.07); }
+.mod-tag.pbi    { color:#b45309; border-color:rgba(180,83,9,.3);   background:rgba(180,83,9,.07); }
+.mod-tag.active { opacity:1; }
+
+.palette-wrap { max-width:940px; margin:0 auto; padding:0 2rem .8rem; }
+.pal-label { font-size:.68rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.55rem; }
+.palette { display:flex; flex-wrap:wrap; gap:.38rem; }
+.pb {
+  width:32px; height:32px; border-radius:7px; border:2px solid #ddd8cc;
+  background:var(--cream); font-size:.72rem; font-weight:800;
+  cursor:pointer; color:var(--ink); transition:all .15s;
+}
+.pb:hover { border-color:var(--teal); color:var(--teal); }
+.pb.done    { background:var(--navy); border-color:var(--navy); color:#fff; }
+.pb.current { background:var(--teal); border-color:var(--teal); color:#fff; }
+
+.q-wrap { max-width:940px; margin:0 auto; padding:.5rem 2rem 2rem; }
+.q-card {
+  background:var(--cream); border-radius:20px; padding:2.4rem 2.6rem;
+  box-shadow:0 8px 32px rgba(10,22,40,.12); border:1px solid rgba(0,0,0,.06);
+  animation:fadeUp .32s ease;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+.q-top { display:flex; align-items:center; gap:.8rem; margin-bottom:1.6rem; flex-wrap:wrap; }
+.q-badge { font-family:'Playfair Display',serif; font-size:.85rem; font-weight:700; background:var(--navy); color:#e8e2d5; padding:.3rem .9rem; border-radius:8px; }
+.q-topic { font-size:.72rem; font-weight:700; background:#f0ece2; color:#888; padding:.28rem .75rem; border-radius:6px; }
+.q-co { margin-left:auto; font-size:.72rem; font-weight:700; color:var(--muted); }
+
+.q-text { font-size:1.08rem; font-weight:600; line-height:1.7; color:var(--ink); margin-bottom:2rem; }
+
+.opts { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+@media(max-width:560px){ .opts{ grid-template-columns:1fr; } }
+.opt {
+  display:flex; align-items:flex-start; gap:.85rem;
+  padding:.95rem 1.15rem; background:#f8f5ef; border:2px solid #e8e3d9;
+  border-radius:12px; cursor:pointer;
+  font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:500;
+  color:var(--ink); text-align:left; line-height:1.55; transition:all .16s;
+}
+.opt:hover:not(:disabled) { border-color:var(--teal); background:rgba(14,165,160,.05); transform:translateY(-2px); box-shadow:0 4px 16px rgba(14,165,160,.12); }
+.opt .key {
+  flex-shrink:0; width:28px; height:28px; border-radius:50%;
+  background:#ece8e0; border:2px solid #d5cfc4;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Playfair Display',serif; font-size:.78rem; font-weight:700; color:#888;
+  transition:all .16s; margin-top:.06rem;
+}
+.opt:hover:not(:disabled) .key { background:var(--teal); border-color:var(--teal); color:#fff; }
+.opt.chosen { border-color:var(--navy); background:rgba(10,22,40,.04); }
+.opt.chosen .key { background:var(--navy); border-color:var(--navy); color:#fff; }
+
+.q-nav { display:flex; align-items:center; justify-content:space-between; margin-top:2rem; gap:.8rem; flex-wrap:wrap; }
+.ans-count { font-size:.83rem; font-weight:600; color:var(--muted); }
+.ans-count b { color:var(--ink); }
+.nav-btns { display:flex; gap:.7rem; align-items:center; }
+.btn-sec {
+  background:none; border:2px solid #ddd8cc; border-radius:10px; padding:.58rem 1.15rem;
+  font-family:'Nunito',sans-serif; font-size:.88rem; font-weight:700; color:#888;
+  cursor:pointer; transition:all .16s;
+}
+.btn-sec:hover { border-color:var(--ink); color:var(--ink); }
+.btn-prim {
+  background:var(--navy); color:#f0ece2; border:none; border-radius:10px;
+  padding:.62rem 1.6rem; font-family:'Nunito',sans-serif;
+  font-size:.93rem; font-weight:800; cursor:pointer; transition:all .16s;
+  display:flex; align-items:center; gap:.45rem;
+}
+.btn-prim:hover { background:var(--teal); transform:translateY(-1px); }
+.btn-prim.submit-btn { background:linear-gradient(135deg,#16a34a,#22c55e); box-shadow:0 4px 16px rgba(22,163,74,.35); }
+.btn-prim.submit-btn:hover { background:linear-gradient(135deg,#14532d,#16a34a); }
+
+/* ════════════════════ OVERLAY ════════════════════ */
+#overlay {
+  display:none; position:fixed; inset:0; background:rgba(10,22,40,.88); z-index:9999;
+  align-items:center; justify-content:center; flex-direction:column; gap:1.4rem;
+}
+#overlay.show { display:flex; }
+.spin { width:54px; height:54px; border:4px solid rgba(255,255,255,.15); border-top-color:var(--teal); border-radius:50%; animation:spin .75s linear infinite; }
+@keyframes spin { to{ transform:rotate(360deg); } }
+#overlay p { font-family:'Playfair Display',serif; font-size:1.15rem; color:#e8e2d5; font-weight:700; }
+
+/* ════════════════════ RESULT ════════════════════ */
+#scr-result { background:var(--navy); min-height:100vh; padding:0 1rem 5rem; }
+.res-inner { max-width:900px; margin:0 auto; padding-top:3rem; }
+
+/* Score hero */
+.score-hero {
+  background:linear-gradient(135deg,var(--navy2),#0d1f3c);
+  border:1px solid rgba(14,165,160,.25); border-radius:28px;
+  padding:3.5rem 2.5rem 2.8rem; text-align:center;
+  position:relative; overflow:hidden; margin-bottom:1.8rem;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+.score-hero::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 120%,rgba(14,165,160,.22) 0%,transparent 60%);
+}
+.hero-label { font-size:.72rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:.5rem; position:relative; }
+.hero-name  { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700; color:#e8e2d5; margin-bottom:2rem; position:relative; }
+
+.score-ring-wrap { position:relative; display:inline-block; margin-bottom:1.5rem; }
+.score-ring { transform:rotate(-90deg); }
+.ring-track { fill:none; stroke:rgba(255,255,255,.07); }
+.ring-fill  { fill:none; stroke-linecap:round; stroke-dasharray:565.48; stroke-dashoffset:565.48; transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1); }
+.ring-text  { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.ring-score { font-family:'Playfair Display',serif; font-size:3.2rem; font-weight:900; color:#f0ece2; line-height:1; }
+.ring-denom { font-size:1rem; font-weight:700; color:var(--muted); }
+.ring-pct   { font-size:.85rem; font-weight:700; color:var(--teal2); margin-top:.2rem; }
+
+.grade-tag {
+  display:inline-block; margin-bottom:1.2rem; position:relative;
+  font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700;
+  padding:.5rem 1.8rem; border-radius:99px; border:2px solid;
+}
+.gA { color:#22c55e; border-color:rgba(34,197,94,.4);  background:rgba(34,197,94,.1); }
+.gB { color:#38bdf8; border-color:rgba(56,189,248,.4); background:rgba(56,189,248,.1); }
+.gC { color:var(--gold); border-color:rgba(245,200,66,.4); background:rgba(245,200,66,.1); }
+.gD { color:#f87171; border-color:rgba(248,113,113,.4); background:rgba(248,113,113,.1); }
+.hero-meta { font-size:.83rem; color:var(--muted); position:relative; }
+.hero-meta b { color:#c8d0db; }
+
+/* Stat cards */
+.stat-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.8rem; }
+@media(max-width:560px){ .stat-row{ grid-template-columns:repeat(2,1fr); } }
+.stat-card { background:var(--navy2); border:1px solid rgba(255,255,255,.07); border-radius:18px; padding:1.4rem 1rem; text-align:center; }
+.sv { font-family:'Playfair Display',serif; font-weight:900; font-size:2.4rem; line-height:1; margin-bottom:.3rem; }
+.sl { font-size:.68rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+.sc .sv{color:var(--green)} .sw .sv{color:var(--red)} .ss .sv{color:var(--amber)} .st .sv{color:var(--teal)}
+
+/* Section titles */
+.sec-title {
+  font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700;
+  color:#e8e2d5; margin:0 0 1rem; padding-bottom:.6rem;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+/* Module bars */
+.mod-bars { display:flex; flex-direction:column; gap:.9rem; margin-bottom:2rem; }
+.mod-bar-row {
+  background:var(--navy2); border:1px solid rgba(255,255,255,.07);
+  border-radius:14px; padding:1.1rem 1.4rem;
+  display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap;
+}
+.mb-name { font-weight:800; font-size:.9rem; min-width:170px; }
+.mb-name.excel{color:#22c55e} .mb-name.sql{color:#60a5fa} .mb-name.pbi{color:#fb923c}
+.mb-track { flex:1; min-width:100px; height:8px; background:rgba(255,255,255,.08); border-radius:99px; overflow:hidden; }
+.mb-fill  { height:100%; border-radius:99px; transition:width 1.2s cubic-bezier(.4,0,.2,1); width:0; }
+.mb-fill.excel{background:linear-gradient(90deg,#15803d,#22c55e)}
+.mb-fill.sql  {background:linear-gradient(90deg,#1d4ed8,#60a5fa)}
+.mb-fill.pbi  {background:linear-gradient(90deg,#c2410c,#fb923c)}
+.mb-score { font-weight:800; font-size:.88rem; min-width:90px; text-align:right; }
+.mb-score.excel{color:#22c55e} .mb-score.sql{color:#60a5fa} .mb-score.pbi{color:#fb923c}
+
+/* ══ IMMEDIATE MARKS TABLE ══ */
+.marks-wrap { margin-bottom:2rem; overflow-x:auto; border-radius:16px; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+.marks-tbl {
+  width:100%; border-collapse:collapse;
+  background:var(--navy2); border-radius:16px; overflow:hidden;
+  border:1px solid rgba(255,255,255,.07); min-width:640px;
+}
+.marks-tbl thead tr { background:rgba(14,165,160,.18); }
+.marks-tbl th {
+  color:var(--teal2); font-size:.7rem; font-weight:800;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:.9rem 1rem; text-align:left;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.marks-tbl td {
+  padding:.7rem 1rem; font-size:.85rem; font-weight:500; color:#c8d0db;
+  border-bottom:1px solid rgba(255,255,255,.04); vertical-align:middle;
+}
+.marks-tbl tr:last-child td { border-bottom:none; }
+.marks-tbl tr:hover td { background:rgba(255,255,255,.02); }
+.marks-tbl .qnum { font-family:'Playfair Display',serif; font-weight:700; color:#555d6e; font-size:.82rem; }
+.marks-tbl .qtxt { font-size:.8rem; color:#9aaabb; max-width:260px; line-height:1.45; }
+.marks-tbl .modtag { font-size:.7rem; font-weight:800; padding:.18rem .55rem; border-radius:5px; }
+.marks-tbl .modtag.excel { color:#22c55e; background:rgba(34,197,94,.1); }
+.marks-tbl .modtag.sql   { color:#60a5fa; background:rgba(96,165,250,.1); }
+.marks-tbl .modtag.pbi   { color:#fb923c; background:rgba(251,146,60,.1); }
+.marks-tbl .ua-cell  { font-size:.82rem; font-weight:600; }
+.marks-tbl .ca-cell  { font-size:.82rem; font-weight:700; color:var(--teal2); }
+.marks-tbl .mk-c { font-size:1rem; font-weight:900; color:var(--green); text-align:center; }
+.marks-tbl .mk-w { font-size:1rem; font-weight:900; color:var(--red);   text-align:center; }
+.marks-tbl .mk-s { font-size:1rem; font-weight:900; color:var(--amber); text-align:center; }
+
+/* Summary row */
+.marks-tbl tfoot td {
+  padding:1rem; font-weight:800; font-size:.9rem;
+  background:rgba(14,165,160,.12); color:var(--teal2);
+  border-top:2px solid rgba(14,165,160,.3);
+}
+
+/* Review */
+.review-filters { display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:1rem; }
+.rf { padding:.35rem .9rem; border-radius:99px; border:1.5px solid rgba(255,255,255,.12); background:none; color:var(--muted); font-family:'Nunito',sans-serif; font-size:.8rem; font-weight:700; cursor:pointer; transition:all .16s; }
+.rf:hover,.rf.on { background:var(--teal); border-color:var(--teal); color:#fff; }
+.review { display:flex; flex-direction:column; gap:.8rem; margin-bottom:2rem; }
+.ri { background:var(--navy2); border:1px solid rgba(255,255,255,.07); border-radius:14px; padding:1.2rem 1.4rem; border-left:4px solid rgba(255,255,255,.1); }
+.ri.rc{border-left-color:var(--green)} .ri.rw{border-left-color:var(--red)} .ri.rs{border-left-color:var(--amber)}
+.ri-top { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; margin-bottom:.65rem; }
+.ri-num { font-size:.75rem; font-weight:800; color:var(--muted); }
+.ri-tag { font-size:.7rem; font-weight:800; padding:.2rem .65rem; border-radius:99px; }
+.ri-tag.c{background:rgba(34,197,94,.15);color:var(--green)}
+.ri-tag.w{background:rgba(239,68,68,.12);color:var(--red)}
+.ri-tag.s{background:rgba(245,158,11,.12);color:var(--amber)}
+.ri-module { font-size:.7rem; font-weight:700; color:#555d6e; margin-left:auto; }
+.ri-q { font-size:.9rem; font-weight:600; color:#c8d0db; line-height:1.6; margin-bottom:.7rem; }
+.ri-opts { display:grid; grid-template-columns:1fr 1fr; gap:.35rem; }
+@media(max-width:500px){ .ri-opts{ grid-template-columns:1fr; } }
+.ri-opt { font-size:.78rem; font-weight:500; color:#6b7585; padding:.32rem .7rem; border-radius:7px; border:1.5px solid rgba(255,255,255,.07); }
+.ri-opt.ca{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35);color:var(--green);font-weight:700}
+.ri-opt.ua{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--red);font-weight:700}
+
+.res-actions { display:flex; gap:1rem; flex-wrap:wrap; margin-top:2.5rem; }
+.btn-retry { background:var(--teal); color:#fff; border:none; border-radius:12px; padding:.85rem 2rem; font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:800; cursor:pointer; transition:all .2s; box-shadow:0 4px 20px rgba(14,165,160,.3); }
+.btn-retry:hover { background:var(--teal2); transform:translateY(-2px); }
+.saved-msg { margin-top:1rem; font-size:.83rem; font-weight:600; }
+.saved-msg.ok  { color:var(--green); }
+.saved-msg.err { color:var(--amber); }
+
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.04)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:99px}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LANDING ══════════════ -->
+<section id="scr-landing" class="screen on">
+  <div class="land-wrap">
+    <div class="land-left">
+      <div class="pill">NCET · Even Semester 2025-26</div>
+      <h1>Data<br><em>Analytics</em><br>MCQ Test</h1>
+      <p>50 questions across Excel, SQL &amp; Power BI. 60-minute timer. Submit and see your full marks immediately.</p>
+      <div class="info-chips">
+        <span class="chip">⏱ 60 Minutes</span>
+        <span class="chip">📊 50 Questions</span>
+        <span class="chip">🏆 Instant Marks</span>
+        <span class="chip">☁️ Auto Saved</span>
+        <span class="chip">📋 Full Review</span>
+      </div>
+    </div>
+    <div class="form-card">
+      <h2>Register &amp; Start</h2>
+      <p class="sub">Fill all details — saved with your score.</p>
+      <div class="field"><label>Full Name</label><input type="text" id="inp-name" placeholder="e.g. Anjali Reddy" maxlength="60"></div>
+      <div class="field"><label>USN / Roll Number</label><input type="text" id="inp-usn" placeholder="e.g. 1NC22CS045" maxlength="20"></div>
+      <div class="field"><label>Branch</label>
+        <select id="inp-sec">
+          <option value="">— Select —</option>
+          <option>AIML</option><option>CSE</option><option>DS</option><option>ECE</option><option>ISE</option><option>E</option>
+        </select>
+      </div>
+      <div class="field"><label>Semester</label>
+        <select id="inp-sem">
+          <option value="">— Select —</option>
+          <option>6th Sem</option>
+        </select>
+      </div>
+      <button class="btn-start" onclick="startTest()">Start Test →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ TEST ══════════════ -->
+<section id="scr-test" class="screen">
+  <div class="test-bar">
+    <div class="bar-brand">NCET <span>·</span> Data Analytics</div>
+    <div class="bar-progress">
+      <div class="bar-prog-top"><span id="prog-txt">0 / 50 answered</span><span id="prog-pct">0%</span></div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    </div>
+    <div id="timer">60:00</div>
+  </div>
+
+  <div class="mod-strip">
+    <div class="mod-tag excel" id="mt-excel">Module I – Excel</div>
+    <div class="mod-tag sql"   id="mt-sql">Module II – SQL</div>
+    <div class="mod-tag pbi"   id="mt-pbi">Module III – Power BI</div>
+  </div>
+
+  <div class="palette-wrap">
+    <div class="pal-label">Jump to question</div>
+    <div class="palette" id="palette"></div>
+  </div>
+
+  <div class="q-wrap"><div class="q-card" id="q-card"></div></div>
+</section>
+
+<!-- ══════════════ OVERLAY ══════════════ -->
+<div id="overlay"><div class="spin"></div><p>Calculating your marks…</p></div>
+
+<!-- ══════════════ RESULT ══════════════ -->
+<section id="scr-result" class="screen">
+  <div class="res-inner">
+
+    <div class="score-hero">
+      <div class="hero-label">Your Result</div>
+      <div class="hero-name" id="r-name"></div>
+      <div class="score-ring-wrap">
+        <svg class="score-ring" width="200" height="200" viewBox="0 0 200 200">
+          <circle class="ring-track" cx="100" cy="100" r="90" stroke-width="12"/>
+          <circle class="ring-fill" id="ring-fill" cx="100" cy="100" r="90" stroke-width="12"/>
+        </svg>
+        <div class="ring-text">
+          <div class="ring-score" id="r-score">–</div>
+          <div class="ring-denom">out of 50</div>
+          <div class="ring-pct" id="r-pct">–%</div>
+        </div>
+      </div>
+      <div class="grade-tag" id="r-grade"></div>
+      <div class="hero-meta" id="r-meta"></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card sc"><div class="sv" id="r-c">–</div><div class="sl">Correct</div></div>
+      <div class="stat-card sw"><div class="sv" id="r-w">–</div><div class="sl">Wrong</div></div>
+      <div class="stat-card ss"><div class="sv" id="r-s">–</div><div class="sl">Skipped</div></div>
+      <div class="stat-card st"><div class="sv" id="r-t">–</div><div class="sl">Time Taken</div></div>
+    </div>
+
+    <div class="sec-title">Module-wise Performance</div>
+    <div class="mod-bars" id="mod-bars"></div>
+
+    <!-- ══ IMMEDIATE MARKS TABLE ══ -->
+    <div class="sec-title">📋 Your Marks — All 50 Questions</div>
+    <div class="marks-wrap">
+      <table class="marks-tbl">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Question</th>
+            <th>Module</th>
+            <th>Your Answer</th>
+            <th>Correct Answer</th>
+            <th style="text-align:center">Marks</th>
+          </tr>
+        </thead>
+        <tbody id="marks-tbody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5" style="text-align:right">Total Marks Obtained →</td>
+            <td style="text-align:center;font-size:1.1rem" id="tfoot-score">–</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="sec-title">Detailed Answer Review</div>
+    <div class="review-filters">
+      <button class="rf on" onclick="setFilter('all',this)">All (50)</button>
+      <button class="rf"    onclick="setFilter('c',this)">✓ Correct</button>
+      <button class="rf"    onclick="setFilter('w',this)">✗ Wrong</button>
+      <button class="rf"    onclick="setFilter('s',this)">– Skipped</button>
+    </div>
+    <div class="review" id="review"></div>
+
+    <div class="res-actions">
+  <button class="btn-retry" onclick="retryTest()">↩ Take Again</button>
+  <button class="btn-prim" style="background:var(--teal2)" onclick="downloadPDF()">📥 Download Result PDF</button>
+</div>
+    <div id="saved-msg" class="saved-msg"></div>
+  </div>
+</section>
+
+<!-- ══════════════ SCRIPT ══════════════ -->
+<script>
+const QS=[
+  // EXCEL (0-16)
+  {q:"Which of the following is the correct syntax for the SUM function in Excel?",opts:["=SUM(A1:A10)","SUM[A1:A10]","SUM(A1,A10)","=ADD(A1:A10)"],ans:0,mod:"Excel",topic:"Basic Functions",co:"CO1"},
+  {q:"In Excel, which feature is used to highlight cells based on their values or conditions?",opts:["Data Validation","Conditional Formatting","Cell Styles","Format Painter"],ans:1,mod:"Excel",topic:"Formatting",co:"CO1"},
+  {q:"Which Excel function returns the number of cells that meet a given condition?",opts:["COUNT","COUNTA","COUNTIF","SUM"],ans:2,mod:"Excel",topic:"Functions",co:"CO1"},
+  {q:"To sort data in Excel from largest to smallest, you would select:",opts:["Ascending order","Descending order","Custom sort","Filter sort"],ans:1,mod:"Excel",topic:"Sorting & Filtering",co:"CO1"},
+  {q:"Which chart type is most suitable for showing trends over time in Excel?",opts:["Pie chart","Bar chart","Line chart","Scatter chart"],ans:2,mod:"Excel",topic:"Charts",co:"CO1"},
+  {q:"In Excel, a cell reference like $A$1 is called a _______ reference.",opts:["Relative","Mixed","Absolute","Dynamic"],ans:2,mod:"Excel",topic:"Cell References",co:"CO1"},
+  {q:"Which Excel function calculates the average of a range of cells?",opts:["MEAN()","AVG()","AVERAGE()","MEDIAN()"],ans:2,mod:"Excel",topic:"Functions",co:"CO1"},
+  {q:"Which function in Excel returns the largest value in a set of values?",opts:["LARGE()","TOP()","MAX()","HIGH()"],ans:2,mod:"Excel",topic:"Functions",co:"CO1"},
+  {q:"The SUMIF function in Excel sums values that:",opts:["Are in a specific column","Meet a specified condition","Are greater than zero","Are in a named range"],ans:1,mod:"Excel",topic:"Functions",co:"CO1"},
+  {q:"Which Excel feature helps prevent invalid data from being entered into a cell?",opts:["Conditional Formatting","Protect Sheet","Data Validation","Cell Lock"],ans:2,mod:"Excel",topic:"Data Validation",co:"CO1"},
+  {q:"What is a Sparkline in Excel?",opts:["A type of conditional formatting","A mini chart placed in a single cell","A type of data bar","A chart template"],ans:1,mod:"Excel",topic:"Charts",co:"CO1"},
+  {q:"What does the CONCATENATE function (or & operator) do in Excel?",opts:["Adds two numbers","Joins two or more text strings","Counts text cells","Finds text in a cell"],ans:1,mod:"Excel",topic:"Functions",co:"CO1"},
+  {q:"Which function rounds a number to a specified number of digits in Excel?",opts:["TRUNCATE()","FLOOR()","ROUND()","INT()"],ans:2,mod:"Excel",topic:"Functions",co:"CO1"},
+  {q:"What does 'Remove Duplicates' do in Excel?",opts:["Hides duplicate rows","Deletes rows with duplicate values in selected columns","Highlights duplicate cells","Moves duplicates to a new sheet"],ans:1,mod:"Excel",topic:"Data Cleaning",co:"CO1"},
+  {q:"In an Excel Pivot Table, the 'Slicer' feature is used to:",opts:["Cut data into rows","Visually filter pivot table data","Apply conditional formatting","Slice cells for editing"],ans:1,mod:"Excel",topic:"Pivot Tables",co:"CO1"},
+  {q:"Which Excel function looks up a value in a row and returns a value from a specified column?",opts:["VLOOKUP","HLOOKUP","XLOOKUP","INDEX-MATCH"],ans:1,mod:"Excel",topic:"Functions",co:"CO1"},
+  {q:"In a Pivot Table, the 'Values' area typically contains:",opts:["Row labels","Column labels","Numeric data to be summarized (e.g., SUM, COUNT)","Filter fields"],ans:2,mod:"Excel",topic:"Pivot Tables",co:"CO1"},
+  // SQL (17-33)
+  {q:"Which SQL command is used to retrieve data from a database?",opts:["GET","FETCH","SELECT","PULL"],ans:2,mod:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"What does the WHERE clause do in a SQL query?",opts:["Groups rows","Filters rows based on a condition","Sorts results","Joins tables"],ans:1,mod:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"Which SQL aggregate function returns the total sum of a numeric column?",opts:["COUNT()","AVG()","MAX()","SUM()"],ans:3,mod:"SQL",topic:"Aggregation",co:"CO2"},
+  {q:"Which type of JOIN returns only the rows that have matching values in both tables?",opts:["LEFT JOIN","RIGHT JOIN","INNER JOIN","FULL JOIN"],ans:2,mod:"SQL",topic:"Joins",co:"CO2"},
+  {q:"Which SQL command is used to add new records into a table?",opts:["ADD","UPDATE","INSERT INTO","CREATE"],ans:2,mod:"SQL",topic:"DML",co:"CO2"},
+  {q:"A subquery in SQL is:",opts:["A query that creates a new table","A query nested inside another query","A query that deletes records","A query used only with GROUP BY"],ans:1,mod:"SQL",topic:"Subqueries & CTEs",co:"CO2"},
+  {q:"Which SQL clause is used to filter results after aggregation?",opts:["WHERE","HAVING","FILTER","GROUP"],ans:1,mod:"SQL",topic:"Aggregation",co:"CO2"},
+  {q:"Which keyword in SQL is used to return only unique (distinct) values?",opts:["UNIQUE","DIFFERENT","DISTINCT","ONLY"],ans:2,mod:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"Which SQL operator is used to search for a pattern in a column?",opts:["MATCH","FIND","LIKE","SEARCH"],ans:2,mod:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"What does NULL represent in SQL?",opts:["Zero value","Empty string","Missing or unknown value","False value"],ans:2,mod:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"The AS keyword in SQL is used to:",opts:["Create a new table","Give a column or table a temporary alias","Assign a value to a variable","Join tables"],ans:1,mod:"SQL",topic:"SELECT & WHERE",co:"CO2"},
+  {q:"What is the difference between WHERE and HAVING in SQL?",opts:["WHERE filters groups; HAVING filters rows","WHERE filters rows before grouping; HAVING filters groups after grouping","There is no difference","HAVING is used only with SELECT *"],ans:1,mod:"SQL",topic:"Aggregation",co:"CO2"},
+  {q:"A LEFT JOIN in SQL returns:",opts:["Only matching rows from both tables","All rows from the left table and matching rows from the right table","All rows from the right table","All rows from both tables"],ans:1,mod:"SQL",topic:"Joins",co:"CO2"},
+  {q:"A CTE (Common Table Expression) in SQL is defined using which keyword?",opts:["DEFINE","WITH","CREATE TEMP","SUBQUERY"],ans:1,mod:"SQL",topic:"Subqueries & CTEs",co:"CO2"},
+  {q:"Which SQL command removes a table's data but keeps the table structure?",opts:["DROP TABLE","DELETE FROM table WHERE 1=1","TRUNCATE TABLE","REMOVE TABLE"],ans:2,mod:"SQL",topic:"DML",co:"CO2"},
+  {q:"Which SQL keyword is used to combine the result sets of two SELECT statements, removing duplicates?",opts:["JOIN","INTERSECT","UNION","MERGE"],ans:2,mod:"SQL",topic:"Subqueries & CTEs",co:"CO2"},
+  {q:"What happens if you execute DELETE FROM table_name without a WHERE clause?",opts:["Nothing happens","Only the first row is deleted","All rows in the table are deleted","The table structure is dropped"],ans:2,mod:"SQL",topic:"DML",co:"CO2"},
+  // POWER BI (34-49)
+  {q:"Power BI is primarily used for:",opts:["Word processing","Spreadsheet calculations","Business intelligence and data visualization","Network management"],ans:2,mod:"PowerBI",topic:"Fundamentals",co:"CO3"},
+  {q:"Which view in Power BI Desktop is used to create and format visual reports?",opts:["Data view","Model view","Report view","Query view"],ans:2,mod:"PowerBI",topic:"Interface",co:"CO3"},
+  {q:"In Power BI, what is Power Query used for?",opts:["Creating DAX formulas","Designing report layouts","Connecting to and transforming data before loading","Publishing reports to the cloud"],ans:2,mod:"PowerBI",topic:"Data Connection",co:"CO3"},
+  {q:"What does DAX stand for in Power BI?",opts:["Data Analysis Expressions","Database Access Extension","Dynamic Analytics Exchange","Data Aggregation Execution"],ans:0,mod:"PowerBI",topic:"DAX",co:"CO3"},
+  {q:"In Power BI data modeling, a relationship between two tables is based on:",opts:["A common column (key) present in both tables","The same number of rows","Identical column names only","Matching data types only"],ans:0,mod:"PowerBI",topic:"Data Modeling",co:"CO3"},
+  {q:"In Power BI, which editor is used to clean and transform data?",opts:["DAX Editor","Power Query Editor","Report Editor","Model Editor"],ans:1,mod:"PowerBI",topic:"Data Connection",co:"CO3"},
+  {q:"In Power BI, what is a 'Measure'?",opts:["A fixed value stored in a table","A DAX formula that calculates dynamically based on filter context","A renamed column","A table relationship"],ans:1,mod:"PowerBI",topic:"DAX",co:"CO3"},
+  {q:"Which DAX function calculates the sum of a column?",opts:["TOTAL()","ADD()","SUM()","SUMX()"],ans:2,mod:"PowerBI",topic:"DAX",co:"CO3"},
+  {q:"What does the CALCULATE function do in DAX?",opts:["Performs arithmetic calculations","Evaluates an expression in a modified filter context","Creates a new table","Joins two tables"],ans:1,mod:"PowerBI",topic:"DAX",co:"CO3"},
+  {q:"What is a 'Slicer' in Power BI?",opts:["A DAX function","A visual used to interactively filter other visuals on a report page","A data transformation step","A type of relationship"],ans:1,mod:"PowerBI",topic:"Visualizations",co:"CO3"},
+  {q:"Which Power BI visual is best for showing trends over time?",opts:["Pie chart","Card","Line chart","Table"],ans:2,mod:"PowerBI",topic:"Visualizations",co:"CO3"},
+  {q:"In Power BI, 'Drill-down' allows you to:",opts:["Export data to Excel","Navigate to lower levels of a hierarchy within a visual","Open another report","Apply a date filter"],ans:1,mod:"PowerBI",topic:"Visualizations",co:"CO3"},
+  {q:"Which panel in Power BI Desktop shows the list of tables and fields available?",opts:["Filters pane","Visualizations pane","Fields pane","Format pane"],ans:2,mod:"PowerBI",topic:"Interface",co:"CO3"},
+  {q:"In Power BI data modeling, a 'Star Schema' consists of:",opts:["One fact table linked to multiple dimension tables","Multiple fact tables with no dimensions","Only dimension tables","Tables with no relationships"],ans:0,mod:"PowerBI",topic:"Data Modeling",co:"CO3"},
+  {q:"Which DAX function counts the number of rows in a table?",opts:["ROWCOUNT()","COUNTROWS()","COUNT()","ROWS()"],ans:1,mod:"PowerBI",topic:"DAX",co:"CO3"},
+  {q:"Which Power BI visual displays data as nested rectangles where size represents value?",opts:["Funnel chart","Treemap","Waterfall chart","Gauge"],ans:1,mod:"PowerBI",topic:"Visualizations",co:"CO3"},
+];
+
+const KEYS=['A','B','C','D'], TOTAL=50, TIME=3600;
+let student={}, answers=new Array(TOTAL).fill(null), cur=0, secsLeft=TIME, secsUsed=0, clock=null;
+
+const $=id=>document.getElementById(id);
+const on=id=>$(id).classList.add('on');
+const off=id=>$(id).classList.remove('on');
+function fmt(s){return`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
+
+function startTest(){
+  const n=$('inp-name').value.trim(),u=$('inp-usn').value.trim(),
+        s=$('inp-sec').value,m=$('inp-sem').value;
+  if(!n||!u||!s||!m){alert('Please fill all fields.');return;}
+  student={name:n,usn:u,section:s,semester:m};
+  off('scr-landing'); on('scr-test');
+  buildPalette(); render(0); startClock();
+}
+
+function startClock(){
+  clock=setInterval(()=>{
+    secsLeft--; secsUsed++;
+    const el=$('timer'); el.textContent=fmt(secsLeft);
+    el.className=secsLeft<=60?'danger':secsLeft<=300?'warn':'';
+    if(secsLeft<=0){clearInterval(clock);submit();}
+  },1000);
+}
+
+function buildPalette(){
+  const pal=$('palette'); pal.innerHTML='';
+  QS.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.className='pb'; b.id=`pb${i}`; b.textContent=i+1;
+    b.onclick=()=>render(i); pal.appendChild(b);
+  });
+}
+function syncPalette(){
+  QS.forEach((_,i)=>{
+    $(`pb${i}`).className='pb'+(i===cur?' current':answers[i]!==null?' done':'');
+  });
+}
+function syncTabs(idx){
+  const m=QS[idx].mod;
+  ['excel','sql','pbi'].forEach(t=>$(`mt-${t}`).classList.remove('active'));
+  $(`mt-${({Excel:'excel',SQL:'sql',PowerBI:'pbi'})[m]}`).classList.add('active');
+}
+
+function render(idx){
+  cur=idx;
+  const q=QS[idx], done=answers.filter(a=>a!==null).length;
+  const pct=Math.round(done/TOTAL*100);
+  $('prog-fill').style.width=pct+'%';
+  $('prog-txt').textContent=`${done} / ${TOTAL} answered`;
+  $('prog-pct').textContent=pct+'%';
+  syncTabs(idx); syncPalette();
+  const sel=answers[idx], isLast=idx===TOTAL-1;
+  $('q-card').innerHTML=`
+    <div class="q-top">
+      <span class="q-badge">Q ${idx+1} <span style="color:var(--muted);font-size:.75rem">/ ${TOTAL}</span></span>
+      <span class="q-topic">${q.mod} · ${q.topic}</span>
+      <span class="q-co">${q.co}</span>
+    </div>
+    <div class="q-text">${q.q}</div>
+    <div class="opts">
+      ${q.opts.map((o,oi)=>`
+        <button class="opt${sel===oi?' chosen':''}" onclick="pick(${oi})">
+          <span class="key">${KEYS[oi]}</span><span>${o}</span>
+        </button>`).join('')}
+    </div>
+    <div class="q-nav">
+      <span class="ans-count"><b>${done}</b> of ${TOTAL} answered</span>
+      <div class="nav-btns">
+        ${idx>0?`<button class="btn-sec" onclick="render(${idx-1})">← Prev</button>`:''}
+        <button class="btn-sec" onclick="render(${idx<TOTAL-1?idx+1:idx})">Skip →</button>
+        ${isLast
+          ?`<button class="btn-prim submit-btn" onclick="confirmSubmit()">Submit &amp; See Marks ✓</button>`
+          :`<button class="btn-prim" onclick="render(${idx+1})">Next →</button>`}
+      </div>
+    </div>`;
+}
+
+function pick(oi){ answers[cur]=(answers[cur]===oi)?null:oi; render(cur); }
+
+function confirmSubmit(){
+  const skip=answers.filter(a=>a===null).length;
+  if(!confirm(skip>0
+    ?`You have ${skip} unanswered question(s).\nSubmit now? Your marks will appear immediately.`
+    :`Submit now? Your marks will appear immediately.`)) return;
+  submit();
+}
+
+
+async function submit() {
+  clearInterval(clock); 
+  secsUsed = TIME - secsLeft;
+  
+  // 1. Show overlay briefly to indicate processing
+  $('overlay').classList.add('show');
+
+  // 2. Calculate marks locally (this is near-instant)
+  let correct = 0, wrong = 0, skip = 0;
+  const ms = { Excel: { c: 0, t: 17 }, SQL: { c: 0, t: 17 }, PowerBI: { c: 0, t: 16 } };
+  
+  QS.forEach((q, i) => {
+    if (answers[i] === null) skip++;
+    else if (answers[i] === q.ans) { correct++; ms[q.mod].c++; }
+    else wrong++;
+  });
+
+  const payload = {
+    student, score: correct, total: TOTAL, correct, wrong, skip,
+    timeTaken: secsUsed, moduleStats: ms,
+    answers: answers.map((a, i) => ({ 
+      qIndex: i, chosen: a, correct: QS[i].ans, isCorrect: a === QS[i].ans, isSkipped: a === null 
+    }))
+  };
+
+  // 3. IMMEDIATELY show results to the user
+  showResult(payload, true, ms); 
+  $('overlay').classList.remove('show');
+
+  // 4. Save to Firebase in the background (DO NOT use 'await' here)
+  if (window._saveResult) {
+    window._saveResult(payload).then(saved => {
+      const sm = $('saved-msg');
+      if (sm) {
+        sm.className = 'saved-msg ' + (saved ? 'ok' : 'err');
+        sm.textContent = saved ? '✓ Result backed up to cloud.' : '⚠ Cloud sync failed. Save a screenshot.';
+      }
+    });
+  }
+}
+
+
+
+
+
+
+
+function showResult(p,saved,ms){
+  off('scr-test'); on('scr-result'); window.scrollTo(0,0);
+  const pct=Math.round(p.correct/50*100);
+
+  $('r-name').textContent=`${p.student.name}  ·  ${p.student.usn}  ·  Branch ${p.student.section}`;
+  $('r-score').textContent=p.correct; $('r-pct').textContent=pct+'%';
+
+  // Animated ring
+  const circumference=2*Math.PI*90;
+  const col=pct>=80?'#22c55e':pct>=60?'#38bdf8':pct>=40?'#f59e0b':'#f87171';
+  const rf=$('ring-fill'); rf.style.stroke=col;
+  setTimeout(()=>{ rf.style.strokeDashoffset=circumference-(pct/100)*circumference; },200);
+
+  // Grade
+  const gb=$('r-grade');
+  if(pct>=80){gb.textContent='🎉 Excellent – Grade A';gb.className='grade-tag gA';}
+  else if(pct>=60){gb.textContent='👍 Good – Grade B';gb.className='grade-tag gB';}
+  else if(pct>=40){gb.textContent='📚 Average – Grade C';gb.className='grade-tag gC';}
+  else{gb.textContent='💪 Needs Work – Grade D';gb.className='grade-tag gD';}
+
+  $('r-meta').innerHTML=`Branch <b>${p.student.section}</b> &nbsp;·&nbsp; ${p.student.semester} &nbsp;·&nbsp; Time: <b>${fmt(p.timeTaken)}</b>`;
+  $('r-c').textContent=p.correct; $('r-w').textContent=p.wrong;
+  $('r-s').textContent=p.skip;   $('r-t').textContent=fmt(p.timeTaken);
+
+  // Module bars
+  const mCfg=[{k:'Excel',l:'Module I – Excel',c:'excel',t:17},{k:'SQL',l:'Module II – SQL',c:'sql',t:17},{k:'PowerBI',l:'Module III – Power BI',c:'pbi',t:16}];
+  $('mod-bars').innerHTML=mCfg.map(m=>{
+    const s=ms[m.k],mp=Math.round(s.c/m.t*100);
+    return`<div class="mod-bar-row">
+      <div class="mb-name ${m.c}">${m.l}</div>
+      <div class="mb-track"><div class="mb-fill ${m.c}" data-w="${mp}" style="width:0"></div></div>
+      <div class="mb-score ${m.c}">${s.c}/${m.t} (${mp}%)</div>
+    </div>`;
+  }).join('');
+  setTimeout(()=>document.querySelectorAll('.mb-fill').forEach(el=>el.style.width=el.dataset.w+'%'),300);
+
+  // ── Marks table ──
+  const rows=QS.map((q,i)=>{
+    const ua=answers[i];
+    const isC=ua!==null&&ua===q.ans, isS=ua===null;
+    const modcls=q.mod==='Excel'?'excel':q.mod==='SQL'?'sql':'pbi';
+    const uaTxt=ua!==null?`${KEYS[ua]}) ${q.opts[ua]}`:'—';
+    const caTxt=`${KEYS[q.ans]}) ${q.opts[q.ans]}`;
+    const mkCls=isC?'mk-c':isS?'mk-s':'mk-w';
+    const mkTxt=isC?'✓ 1':isS?'– 0':'✗ 0';
+    return`<tr>
+      <td class="qnum">${i+1}</td>
+      <td class="qtxt">${q.q}</td>
+      <td><span class="modtag ${modcls}">${q.mod}</span></td>
+      <td class="ua-cell" style="${!isC&&!isS?'color:var(--red)':''}">${uaTxt}</td>
+      <td class="ca-cell">${caTxt}</td>
+      <td class="${mkCls}">${mkTxt}</td>
+    </tr>`;
+  }).join('');
+  $('marks-tbody').innerHTML=rows;
+  $('tfoot-score').textContent=`${p.correct} / 50`;
+
+  // Review
+  window._rev=QS.map((q,i)=>{const ua=answers[i];return{i,q,ua,st:ua===null?'s':ua===q.ans?'c':'w'};});
+  renderReview('all');
+
+  const sm=$('saved-msg');
+  sm.className='saved-msg '+(saved?'ok':'err');
+  sm.textContent=saved?'✓ Result saved to database successfully.':'⚠ Could not connect to database. Screenshot this page to save your marks.';
+}
+
+function renderReview(f){
+  const items=window._rev.filter(r=>f==='all'||r.st===f);
+  const lbl={c:'✓ Correct',w:'✗ Wrong',s:'– Skipped'};
+  $('review').innerHTML=items.map(({i,q,ua,st})=>{
+    const opts=q.opts.map((o,oi)=>{
+      let cls='';
+      if(oi===q.ans)cls='ca';
+      else if(oi===ua&&ua!==q.ans)cls='ua';
+      return`<div class="ri-opt ${cls}">${KEYS[oi]}) ${o}</div>`;
+    }).join('');
+    return`<div class="ri r${st}">
+      <div class="ri-top">
+        <span class="ri-num">Q${i+1}</span>
+        <span class="ri-tag ${st}">${lbl[st]}</span>
+        <span class="ri-module">${q.mod} · ${q.topic}</span>
+      </div>
+      <div class="ri-q">${q.q}</div>
+      <div class="ri-opts">${opts}</div>
+    </div>`;
+  }).join('')||`<div style="color:var(--muted);text-align:center;padding:2rem">No questions in this category.</div>`;
+}
+
+function setFilter(f,btn){
+  document.querySelectorAll('.rf').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on'); renderReview(f);
+}
+
+function retryTest(){
+  if(!confirm('Restart? All answers will be cleared.'))return;
+  answers=new Array(TOTAL).fill(null);
+  cur=0;secsLeft=TIME;secsUsed=0;clearInterval(clock);
+  off('scr-result');on('scr-landing');
+}
+
+function downloadPDF() {
+  // 1. Target the specific result container
+  const element = document.querySelector('.res-inner');
+  
+  // 2. Visual feedback: Change button text
+  const btn = event.target;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = "Generating...";
+  btn.disabled = true;
+
+  const opt = {
+    margin:       [0.5, 0.3], // Top/Bottom, Left/Right
+    filename:     `NCET_Result_${student.usn}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { 
+      scale: 2, 
+      useCORS: true, 
+      letterRendering: true,
+      backgroundColor: '#0a1628', // Explicitly set the navy background
+      scrollY: 0
+    },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
+    pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+  };
+
+  // 3. Execution with a slight delay to ensure DOM is ready
+  html2pdf().set(opt).from(element).toPdf().get('pdf').save().then(() => {
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }).catch(err => {
+    console.error("PDF Error:", err);
+    alert("PDF generation failed. Please try taking a screenshot.");
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  });
+}
+
+</script>
+</body>
+</html>
